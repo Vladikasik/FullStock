@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FullStock | AI-Driven Supply Chain for Restaurants</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
+                <div class="logo-container p-3 mb-3">
+                    <h3 class="text-light">FullStock</h3>
+                    <p class="text-light opacity-75">AI-Powered Supply Chain</p>
+                </div>
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#overview-section">
+                                <i class="bi bi-house-door me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#inventory-section">
+                                <i class="bi bi-box me-2"></i>
+                                Inventory
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#predictions-section">
+                                <i class="bi bi-graph-up me-2"></i>
+                                AI Predictions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#suppliers-section">
+                                <i class="bi bi-truck me-2"></i>
+                                Supplier Suggestions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#roadmap-section">
+                                <i class="bi bi-map me-2"></i>
+                                Roadmap
+                            </a>
+                        </li>
+                        <li class="nav-item mt-4">
+                            <a class="nav-link text-muted" href="#">
+                                <i class="bi bi-gear me-2"></i>
+                                Settings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-muted" href="#">
+                                <i class="bi bi-question-circle me-2"></i>
+                                Help
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Header -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Supply Chain Dashboard</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-calendar3"></i>
+                            Today
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Overview Section -->
+                <section id="overview-section" class="mb-5">
+                    <h2 class="border-bottom pb-2">Overview</h2>
+                    <div class="row mt-4">
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-muted">Critical Items</h5>
+                                    <h2 class="card-text text-danger">8</h2>
+                                    <small class="text-muted">↑ 3 from yesterday</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-muted">Warning Items</h5>
+                                    <h2 class="card-text text-warning">15</h2>
+                                    <small class="text-muted">↓ 2 from yesterday</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-muted">Healthy Items</h5>
+                                    <h2 class="card-text text-success">127</h2>
+                                    <small class="text-muted">↑ 5 from yesterday</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-muted">AI Suggestions</h5>
+                                    <h2 class="card-text text-primary">12</h2>
+                                    <small class="text-muted">New supplier options</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-8 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white border-0">
+                                    <h5 class="card-title mb-0">Inventory Trends</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="trendChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white border-0">
+                                    <h5 class="card-title mb-0">Category Distribution</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="categoryChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Inventory Section -->
+                <section id="inventory-section" class="mb-5">
+                    <h2 class="border-bottom pb-2">Inventory Status</h2>
+                    <div class="table-responsive mt-4">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Category</th>
+                                    <th>Current Stock</th>
+                                    <th>Min. Required</th>
+                                    <th>Status</th>
+                                    <th>Next Delivery</th>
+                                    <th>AI Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventory-table-body">
+                                <!-- Populated via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- AI Predictions Section -->
+                <section id="predictions-section" class="mb-5">
+                    <h2 class="border-bottom pb-2">AI Predictions</h2>
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white border-0">
+                                    <h5 class="card-title mb-0">Forecasted Shortages</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="shortageChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Usage Patterns</h5>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="patternDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Weekly
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="patternDropdown">
+                                            <li><a class="dropdown-item" href="#">Daily</a></li>
+                                            <li><a class="dropdown-item" href="#">Weekly</a></li>
+                                            <li><a class="dropdown-item" href="#">Monthly</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="usageChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white border-0">
+                                    <h5 class="card-title mb-0">AI Insights</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-primary d-flex" role="alert">
+                                        <i class="bi bi-lightbulb me-2 fs-4"></i>
+                                        <div>
+                                            <strong>Seasonal Pattern Detected:</strong> Tomato consumption increases by 35% during summer months. Consider adjusting your inventory levels accordingly.
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-warning d-flex" role="alert">
+                                        <i class="bi bi-exclamation-triangle me-2 fs-4"></i>
+                                        <div>
+                                            <strong>Supply Chain Risk:</strong> Your current beef supplier has reported logistics issues. We suggest exploring alternative sources shown in the Supplier Suggestions section.
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-success d-flex" role="alert">
+                                        <i class="bi bi-graph-up me-2 fs-4"></i>
+                                        <div>
+                                            <strong>Efficiency Opportunity:</strong> Based on your ordering patterns, consolidating dairy orders could save €450 per month in delivery fees.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Supplier Suggestions Section -->
+                <section id="suppliers-section" class="mb-5">
+                    <h2 class="border-bottom pb-2">Supplier Suggestions</h2>
+                    <div class="row mt-4" id="supplier-cards">
+                        <!-- Populated via JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Roadmap Section -->
+                <section id="roadmap-section" class="mb-5">
+                    <h2 class="border-bottom pb-2">Integration Roadmap</h2>
+                    <div class="row mt-4">
+                        <div class="col-12 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body">
+                                    <div class="roadmap-timeline">
+                                        <div class="roadmap-item active">
+                                            <div class="roadmap-point"></div>
+                                            <div class="roadmap-content">
+                                                <h5>Phase 1: Excel Integration</h5>
+                                                <p>Current implementation uses Excel as the baseline data source, allowing restaurants to leverage existing inventory spreadsheets.</p>
+                                                <div class="badge bg-success">Current Phase</div>
+                                            </div>
+                                        </div>
+                                        <div class="roadmap-item">
+                                            <div class="roadmap-point"></div>
+                                            <div class="roadmap-content">
+                                                <h5>Phase 2: POS System Connectivity</h5>
+                                                <p>Direct integration with popular restaurant POS systems for real-time inventory updates based on sales.</p>
+                                                <div class="badge bg-secondary">Q3 2025</div>
+                                            </div>
+                                        </div>
+                                        <div class="roadmap-item">
+                                            <div class="roadmap-point"></div>
+                                            <div class="roadmap-content">
+                                                <h5>Phase 3: SAP ERP Integration</h5>
+                                                <p>Enterprise-level connectivity with SAP ERP and other major supply systems for large restaurant chains.</p>
+                                                <div class="badge bg-secondary">Q1 2026</div>
+                                            </div>
+                                        </div>
+                                        <div class="roadmap-item">
+                                            <div class="roadmap-point"></div>
+                                            <div class="roadmap-content">
+                                                <h5>Phase 4: Advanced AI Analytics</h5>
+                                                <p>Enhanced prediction models using machine learning algorithms trained on comprehensive industry data.</p>
+                                                <div class="badge bg-secondary">Q3 2026</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white border-0">
+                                    <h5 class="card-title mb-0">Data Security & Compliance</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>FullStock is designed with data security and compliance as core principles:</p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item border-0">
+                                                    <i class="bi bi-shield-check text-success me-2"></i>
+                                                    GDPR & German privacy regulation compliant
+                                                </li>
+                                                <li class="list-group-item border-0">
+                                                    <i class="bi bi-shield-check text-success me-2"></i>
+                                                    End-to-end data encryption
+                                                </li>
+                                                <li class="list-group-item border-0">
+                                                    <i class="bi bi-shield-check text-success me-2"></i>
+                                                    Regular security audits
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item border-0">
+                                                    <i class="bi bi-shield-check text-success me-2"></i>
+                                                    Secure API integrations
+                                                </li>
+                                                <li class="list-group-item border-0">
+                                                    <i class="bi bi-shield-check text-success me-2"></i>
+                                                    Role-based access controls
+                                                </li>
+                                                <li class="list-group-item border-0">
+                                                    <i class="bi bi-shield-check text-success me-2"></i>
+                                                    Compliance documentation
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <footer class="d-flex justify-content-between align-items-center py-3 my-4 border-top">
+                    <p class="mb-0 text-muted">© 2025 FullStock | AI-Driven Supply Chain for Restaurants</p>
+                    <span class="text-muted">Demo Version 1.0</span>
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="data/mock-data.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/predictions.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
