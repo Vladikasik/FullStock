@@ -94,6 +94,19 @@ main {
 .supplier-card {
     position: relative;
     overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+
+.supplier-card.highlight-card {
+    border-left: 4px solid var(--primary-color) !important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 102, 204, 0.15) !important;
+    animation: card-pulse 2s infinite;
+}
+
+@keyframes card-pulse {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
 }
 
 .supplier-card .sponsored-badge {
@@ -112,6 +125,10 @@ main {
     height: 80px;
     object-fit: contain;
     margin-bottom: 1rem;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .supplier-match {
@@ -482,23 +499,43 @@ main {
     font-size: 1rem;
 }
 
-/* Clickable Cards */
+/* Clickable cards */
 .clickable-card {
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    position: relative;
 }
 
 .clickable-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    border-left: 3px solid var(--primary-color);
+    background-color: rgba(0, 102, 204, 0.03);
 }
 
-/* Sorted Table */
+.clickable-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: transparent;
+    border-radius: 0.5rem;
+    pointer-events: none;
+    transition: background-color 0.2s;
+}
+
+.clickable-card:active::after {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Sortable table headers */
 th.sortable {
     cursor: pointer;
     user-select: none;
     position: relative;
+    padding-right: 1.5rem !important;
+    background-color: rgba(0, 0, 0, 0.02);  /* Light background to indicate sortable column */
 }
 
 th.sortable:hover {
@@ -506,22 +543,41 @@ th.sortable:hover {
 }
 
 .sort-icon {
-    font-size: 0.8rem;
-    margin-left: 5px;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.2s;
+    opacity: 0.5;
 }
 
-/* Highlight row */
+th.sortable:hover .sort-icon {
+    opacity: 1;
+}
+
+th[data-sort-direction] .sort-icon {
+    opacity: 1;
+    color: var(--primary-color);
+}
+
+/* Status column indicators */
+th.sortable[data-sort-direction="asc"] .sort-icon {
+    transform: translateY(-50%) rotate(0deg);
+}
+
+th.sortable[data-sort-direction="desc"] .sort-icon {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Highlighted rows when filtering table */
 .highlight-row {
-    animation: pulse 1s ease-in-out infinite alternate;
+    animation: pulse 1.5s ease-in-out 2;
 }
 
 @keyframes pulse {
-    from {
-        background-color: rgba(0, 102, 204, 0.05);
-    }
-    to {
-        background-color: rgba(0, 102, 204, 0.15);
-    }
+    0% { background-color: transparent; }
+    50% { background-color: rgba(0, 102, 204, 0.1); }
+    100% { background-color: transparent; }
 }
 
 /* Clear filter button */

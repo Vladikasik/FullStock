@@ -130,7 +130,7 @@ const supplierData = [
         deliveryTime: "Next day",
         priceIndex: "€€",
         matchScore: 92,
-        logoUrl: "https://via.placeholder.com/80x80.png?text=FF",
+        logoUrl: "assets/farm.png",
         isSponsored: false,
         description: "Local farm with daily fresh deliveries and excellent quality produce."
     },
@@ -143,7 +143,7 @@ const supplierData = [
         deliveryTime: "2-3 days",
         priceIndex: "€€€",
         matchScore: 87,
-        logoUrl: "https://via.placeholder.com/80x80.png?text=PM",
+        logoUrl: "assets/meat.png",
         isSponsored: true,
         description: "High-quality, ethically sourced meats from trusted farms. 10% off for new customers."
     },
@@ -156,7 +156,7 @@ const supplierData = [
         deliveryTime: "Next day",
         priceIndex: "€€",
         matchScore: 94,
-        logoUrl: "https://via.placeholder.com/80x80.png?text=DD",
+        logoUrl: "assets/milk.png",
         isSponsored: false,
         description: "Fresh dairy products directly from local farms with excellent quality control."
     },
@@ -169,7 +169,7 @@ const supplierData = [
         deliveryTime: "1-2 days",
         priceIndex: "€€€",
         matchScore: 85,
-        logoUrl: "https://via.placeholder.com/80x80.png?text=OH",
+        logoUrl: "assets/seafood.png",
         isSponsored: true,
         description: "Sustainable seafood delivered fresh. Special promotion: Free delivery on orders over €100."
     },
@@ -182,7 +182,7 @@ const supplierData = [
         deliveryTime: "2-3 days",
         priceIndex: "€",
         matchScore: 91,
-        logoUrl: "https://via.placeholder.com/80x80.png?text=PE",
+        logoUrl: "assets/pantry.png",
         isSponsored: false,
         description: "Best prices on high-quality pantry staples with efficient delivery."
     },
@@ -195,7 +195,7 @@ const supplierData = [
         deliveryTime: "3-4 days",
         priceIndex: "€€",
         matchScore: 88,
-        logoUrl: "https://via.placeholder.com/80x80.png?text=PB",
+        logoUrl: "assets/bevarages.png",
         isSponsored: true,
         description: "Premium selection of beverages with wholesale pricing. Limited time offer: 15% off wine cases."
     }

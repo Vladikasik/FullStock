@@ -133,31 +133,52 @@ function handleViewSuggestions(event) {
     
     if (!item) return;
     
-    // Scroll to supplier section
-    document.querySelector('#suppliers-section').scrollIntoView({ 
-        behavior: 'smooth' 
+    // First highlight the corresponding supplier section in the sidebar
+    highlightSidebarItem('suppliers-section');
+    
+    // Get matching suppliers by category
+    const matchingSuppliers = supplierData.filter(supplier => 
+        supplier.category === item.category || 
+        supplier.items.includes(item.name)
+    );
+    
+    // Remove highlights from all supplier cards first
+    document.querySelectorAll('.supplier-card').forEach(card => {
+        card.classList.remove('border-primary', 'shadow', 'highlight-card');
     });
     
-    // Highlight matching suppliers
-    const suppliers = findAlternativeSuppliers(item);
-    if (suppliers.length > 0) {
-        // Add pulsing effect to matching supplier cards
-        document.querySelectorAll('.supplier-card').forEach(card => {
-            card.classList.remove('border-primary', 'shadow');
-        });
-        
-        suppliers.forEach(supplier => {
+    // Add highlighting to matching supplier cards
+    if (matchingSuppliers.length > 0) {
+        matchingSuppliers.forEach(supplier => {
             const card = document.querySelector(`.supplier-card[data-id="${supplier.id}"]`);
             if (card) {
-                card.classList.add('border-primary', 'shadow');
-                
-                // Scroll the first match into view
-                if (supplier === suppliers[0]) {
-                    setTimeout(() => {
-                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 500);
-                }
+                card.classList.add('border-primary', 'shadow', 'highlight-card');
             }
+        });
+        
+        // Scroll to supplier section with a small delay to ensure DOM updates
+        setTimeout(() => {
+            // First scroll to the supplier section
+            document.querySelector('#suppliers-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+            
+            // Add a small delay before scrolling to the first match
+            setTimeout(() => {
+                // Find the first highlighted card and scroll it into view
+                const firstCard = document.querySelector('.supplier-card.highlight-card');
+                if (firstCard) {
+                    firstCard.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+            }, 600);
+        }, 100);
+    } else {
+        // If no matching suppliers, just scroll to the supplier section
+        document.querySelector('#suppliers-section').scrollIntoView({
+            behavior: 'smooth'
         });
     }
 }
@@ -271,27 +292,17 @@ function setupEventListeners() {
  * to redirect to the inventory status section
  */
 function makeStatusCardsClickable() {
-    // Get the cards
-    const criticalCard = document.querySelector('.card-title:contains("Critical Items")').closest('.card');
-    const warningCard = document.querySelector('.card-title:contains("Warning Items")').closest('.card');
-    
-    // Using querySelector with :contains (not standard, using a fallback approach)
-    if (!criticalCard) {
-        // Fallback method
-        document.querySelectorAll('.card-title').forEach(title => {
-            if (title.textContent.includes('Critical Items')) {
-                const card = title.closest('.card');
-                makeCardClickable(card, 'critical');
-            }
-            if (title.textContent.includes('Warning Items')) {
-                const card = title.closest('.card');
-                makeCardClickable(card, 'warning');
-            }
-        });
-    } else {
-        makeCardClickable(criticalCard, 'critical');
-        makeCardClickable(warningCard, 'warning');
-    }
+    // Fallback method to find the cards
+    document.querySelectorAll('.card-title').forEach(title => {
+        if (title.textContent.includes('Critical Items')) {
+            const card = title.closest('.card');
+            makeCardClickable(card, 'critical');
+        }
+        if (title.textContent.includes('Warning Items')) {
+            const card = title.closest('.card');
+            makeCardClickable(card, 'warning');
+        }
+    });
 }
 
 /**
@@ -304,6 +315,7 @@ function makeCardClickable(card, status) {
     
     // Add clickable styling
     card.classList.add('clickable-card');
+    card.style.cursor = 'pointer';
     
     // Add click event
     card.addEventListener('click', () => {
@@ -314,7 +326,27 @@ function makeCardClickable(card, status) {
         
         // Filter the table to show only items with this status
         filterInventoryTable(status);
+        
+        // Highlight the inventory section in the sidebar
+        highlightSidebarItem('inventory-section');
     });
+}
+
+/**
+ * Highlight the corresponding sidebar item
+ * @param {string} sectionId - The ID of the section to highlight
+ */
+function highlightSidebarItem(sectionId) {
+    // Remove active class from all nav links
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add active class to the matching link
+    const navLink = document.querySelector(`.sidebar .nav-link[href="#${sectionId}"]`);
+    if (navLink) {
+        navLink.classList.add('active');
+    }
 }
 
 /**
@@ -363,51 +395,58 @@ function filterInventoryTable(status) {
 }
 
 /**
- * Make the inventory table sortable by status and next delivery
+ * Make the inventory table sortable by status only
  */
 function makeInventoryTableSortable() {
     const table = document.querySelector('#inventory-section table');
     
     if (!table) return;
     
-    // Add sort indicators to sortable columns
-    const statusHeader = table.querySelector('th:nth-child(5)'); // Status column
-    const deliveryHeader = table.querySelector('th:nth-child(6)'); // Next Delivery column
+    // Add sort indicators and functionality only to Status column
+    const headers = table.querySelectorAll('th');
     
-    if (statusHeader) {
-        statusHeader.innerHTML += ' <i class="bi bi-arrow-down-up sort-icon"></i>';
-        statusHeader.classList.add('sortable');
-        statusHeader.addEventListener('click', () => sortTable(4, 'status'));
-    }
-    
-    if (deliveryHeader) {
-        deliveryHeader.innerHTML += ' <i class="bi bi-arrow-down-up sort-icon"></i>';
-        deliveryHeader.classList.add('sortable');
-        deliveryHeader.addEventListener('click', () => sortTable(5, 'date'));
-    }
+    headers.forEach((header, index) => {
+        const columnText = header.textContent.trim();
+        
+        // Make only Status column sortable
+        if (columnText === 'Status') {
+            // Add sort icon
+            header.innerHTML = `${columnText} <i class="bi bi-arrow-down-up sort-icon"></i>`;
+            header.classList.add('sortable');
+            header.style.cursor = 'pointer';
+            
+            // Add click event
+            header.addEventListener('click', () => sortTable(index, 'status'));
+        }
+    });
 }
 
 /**
  * Sort the inventory table
  * @param {number} columnIndex - The index of the column to sort by
- * @param {string} type - The type of data ('text', 'number', 'date', 'status')
+ * @param {string} type - The type of data ('status' only)
  */
 function sortTable(columnIndex, type) {
     const table = document.querySelector('#inventory-section table');
     const tbody = table.querySelector('tbody');
     const rows = Array.from(tbody.querySelectorAll('tr'));
-    const header = table.querySelector(`th:nth-child(${columnIndex + 1})`);
+    const header = table.querySelectorAll('th')[columnIndex];
     
     // Toggle sort direction
     const currentDirection = header.getAttribute('data-sort-direction') || 'asc';
     const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
     
-    // Update header attributes
+    // Update all header attributes and icons
     document.querySelectorAll('th').forEach(th => {
         th.removeAttribute('data-sort-direction');
-        th.querySelector('.sort-icon')?.classList.remove('bi-arrow-up', 'bi-arrow-down');
+        const sortIcon = th.querySelector('.sort-icon');
+        if (sortIcon) {
+            sortIcon.classList.remove('bi-arrow-up', 'bi-arrow-down');
+            sortIcon.classList.add('bi-arrow-down-up');
+        }
     });
     
+    // Update current header
     header.setAttribute('data-sort-direction', newDirection);
     const icon = header.querySelector('.sort-icon');
     if (icon) {
@@ -417,19 +456,9 @@ function sortTable(columnIndex, type) {
     
     // Sort the rows
     rows.sort((a, b) => {
-        let valueA, valueB;
-        
-        // Get cell values based on column type
-        if (type === 'status') {
-            valueA = getStatusPriority(a.querySelector(`td:nth-child(${columnIndex + 1}) .status-badge`).textContent.trim());
-            valueB = getStatusPriority(b.querySelector(`td:nth-child(${columnIndex + 1}) .status-badge`).textContent.trim());
-        } else if (type === 'date') {
-            valueA = getDateValue(a.querySelector(`td:nth-child(${columnIndex + 1})`).textContent.trim());
-            valueB = getDateValue(b.querySelector(`td:nth-child(${columnIndex + 1})`).textContent.trim());
-        } else {
-            valueA = a.querySelector(`td:nth-child(${columnIndex + 1})`).textContent.trim();
-            valueB = b.querySelector(`td:nth-child(${columnIndex + 1})`).textContent.trim();
-        }
+        // We only sort by status now
+        const valueA = getStatusPriority(a.querySelector(`td:nth-child(${columnIndex + 1}) .status-badge`).textContent.trim());
+        const valueB = getStatusPriority(b.querySelector(`td:nth-child(${columnIndex + 1}) .status-badge`).textContent.trim());
         
         // Compare values
         if (valueA < valueB) return newDirection === 'asc' ? -1 : 1;
@@ -453,52 +482,4 @@ function getStatusPriority(status) {
         case 'ok': return 3;
         default: return 4;
     }
-}
-
-/**
- * Convert date text to a comparable value
- * @param {string} dateText - Date text (Today, Tomorrow, or date)
- * @returns {number} - Timestamp for sorting
- */
-function getDateValue(dateText) {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    if (dateText === 'Today') {
-        return today.getTime();
-    } else if (dateText === 'Tomorrow') {
-        return tomorrow.getTime();
-    } else {
-        // Parse date like "Mar 15"
-        const parts = dateText.split(' ');
-        if (parts.length === 2) {
-            const month = getMonthNumber(parts[0]);
-            const day = parseInt(parts[1]);
-            const date = new Date(today.getFullYear(), month, day);
-            
-            // If the date is in the past, it's probably next year
-            if (date < today) {
-                date.setFullYear(today.getFullYear() + 1);
-            }
-            
-            return date.getTime();
-        }
-    }
-    
-    // Default to end of list if unparseable
-    return Number.MAX_SAFE_INTEGER;
-}
-
-/**
- * Convert month abbreviation to month number (0-11)
- * @param {string} month - Three-letter month abbreviation
- * @returns {number} - Month number (0-11)
- */
-function getMonthNumber(month) {
-    const months = {
-        'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
-        'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
-    };
-    return months[month] || 0;
 }

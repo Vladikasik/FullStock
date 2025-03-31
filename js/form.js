@@ -16,13 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Create the Request Demo section and add it to the top of the main content
+ * Create the Request Demo section and add it to both the top and bottom of the main content
  */
 function createRequestDemoSection() {
     const demoSection = `
         <div class="request-demo-section">
             <h2>Request Demo for your organization</h2>
-            <button id="request-demo-btn" class="btn btn-primary">Request Demo</button>
+            <button class="request-demo-btn btn btn-primary">Request Demo</button>
         </div>
     `;
     
@@ -32,13 +32,21 @@ function createRequestDemoSection() {
     
     if (mainContent && header) {
         header.insertAdjacentHTML('afterend', demoSection);
-        
-        // Add click event listener to the request demo button
-        document.getElementById('request-demo-btn').addEventListener('click', (event) => {
+    }
+    
+    // Insert at the bottom of the page, after the roadmap section
+    const roadmapSection = document.querySelector('#roadmap-section');
+    if (roadmapSection) {
+        roadmapSection.insertAdjacentHTML('afterend', demoSection);
+    }
+    
+    // Add click event listeners to all demo buttons
+    document.querySelectorAll('.request-demo-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
             event.preventDefault();
             showForm();
         });
-    }
+    });
 }
 
 /**
