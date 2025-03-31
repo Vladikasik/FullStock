@@ -1,0 +1,17 @@
+{
+  "name": "fullstock-website",
+  "version": "1.0.0",
+  "description": "FullStock AI-Driven Supply Chain for Restaurants",
+  "scripts": {
+    "build": "node build-config.js",
+    "dev-build": "node dev-build.js",
+    "dev": "npm run dev-build && echo 'Starting development server...'"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "dotenv": "^16.3.1"
+  }
+} 
