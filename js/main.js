@@ -155,29 +155,21 @@ function handleViewSuggestions(event) {
                 card.classList.add('border-primary', 'shadow', 'highlight-card');
             }
         });
+    }
+    
+    // Scroll to the supplier section heading to ensure it's at the top
+    const suppliersSection = document.querySelector('#suppliers-section');
+    if (suppliersSection) {
+        // Get the heading element (h2) inside the section
+        const heading = suppliersSection.querySelector('h2');
         
-        // Scroll to supplier section with a small delay to ensure DOM updates
-        setTimeout(() => {
-            // First scroll to the supplier section
-            document.querySelector('#suppliers-section').scrollIntoView({
-                behavior: 'smooth'
-            });
-            
-            // Add a small delay before scrolling to the first match
-            setTimeout(() => {
-                // Find the first highlighted card and scroll it into view
-                const firstCard = document.querySelector('.supplier-card.highlight-card');
-                if (firstCard) {
-                    firstCard.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
-                }
-            }, 600);
-        }, 100);
-    } else {
-        // If no matching suppliers, just scroll to the supplier section
-        document.querySelector('#suppliers-section').scrollIntoView({
+        // Use window.scrollTo with an offset to ensure the section stays at the top
+        const yOffset = -20; // Small offset to avoid exact edge
+        const y = heading ? heading.getBoundingClientRect().top + window.pageYOffset + yOffset :
+                           suppliersSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        
+        window.scrollTo({
+            top: y,
             behavior: 'smooth'
         });
     }
@@ -215,7 +207,7 @@ function populateSupplierSuggestions() {
                         <span><strong>Stock:</strong> ${supplier.stockAvailability}</span>
                         <span><strong>Delivery:</strong> ${supplier.deliveryTime}</span>
                     </div>
-                    <button class="btn btn-primary">Contact Supplier</button>
+                    <a href="mailto:streamers.cologne@gmail.com?subject=Inquiry about ${encodeURIComponent(supplier.name)} - ${encodeURIComponent(supplier.category)}" class="btn btn-primary">Contact Supplier</a>
                 </div>
             </div>
         `;
