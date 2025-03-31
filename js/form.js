@@ -1,5 +1,5 @@
 /**
- * Form.js - Handles the popup form that appears when clicking anywhere on the website
+ * Form.js - Handles the popup form for requesting a demo
  */
 
 // Get Airtable API keys from environment variables
@@ -8,12 +8,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create the form overlay and insert it into the document
     createFormOverlay();
     
-    // Add click event listener to the entire document (excluding the form itself)
-    setupClickListener();
+    // Create the Request Demo section at the top
+    createRequestDemoSection();
     
     // Add form submission handler
     setupFormSubmission();
 });
+
+/**
+ * Create the Request Demo section and add it to the top of the main content
+ */
+function createRequestDemoSection() {
+    const demoSection = `
+        <div class="request-demo-section">
+            <h2>Request Demo for your organization</h2>
+            <button id="request-demo-btn" class="btn btn-primary">Request Demo</button>
+        </div>
+    `;
+    
+    // Insert at the top of the main content, right after the header
+    const mainContent = document.querySelector('main');
+    const header = document.querySelector('main .d-flex.justify-content-between');
+    
+    if (mainContent && header) {
+        header.insertAdjacentHTML('afterend', demoSection);
+        
+        // Add click event listener to the request demo button
+        document.getElementById('request-demo-btn').addEventListener('click', (event) => {
+            event.preventDefault();
+            showForm();
+        });
+    }
+}
 
 /**
  * Create the form overlay and append it to the body
@@ -58,55 +84,24 @@ function createFormOverlay() {
     `;
     
     document.body.insertAdjacentHTML('beforeend', formHtml);
-}
-
-/**
- * Set up click listener on document to show form
- */
-function setupClickListener() {
-    // Get form elements
+    
+    // Set up close button functionality
     const formOverlay = document.getElementById('form-overlay');
-    const formPopup = document.getElementById('contact-form-popup');
     const closeBtn = document.getElementById('form-close-btn');
     const successCloseBtn = document.querySelector('.close-success-btn');
     
-    // Add click event to the document (except on the form itself)
-    document.addEventListener('click', (event) => {
-        // Ignore clicks on the form itself
-        if (formPopup && formPopup.contains(event.target)) {
-            return;
-        }
-        
-        // If form already shown, don't show it again
-        if (formOverlay && !formOverlay.classList.contains('hidden')) {
-            return;
-        }
-        
-        // Show the form
-        if (formOverlay) {
-            formOverlay.classList.remove('hidden');
-            document.body.classList.add('no-scroll');
-        }
-    });
-    
-    // Close button handler
     if (closeBtn) {
-        closeBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent document click handler from firing
-            formOverlay.classList.add('hidden');
-            document.body.classList.remove('no-scroll');
+        closeBtn.addEventListener('click', () => {
+            hideForm();
         });
     }
     
     // Success screen close button handler
     if (successCloseBtn) {
-        successCloseBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent document click handler from firing
-            
+        successCloseBtn.addEventListener('click', () => {
             // Hide success message and form overlay
             document.getElementById('form-success').classList.add('hidden');
-            formOverlay.classList.add('hidden');
-            document.body.classList.remove('no-scroll');
+            hideForm();
             
             // Reset the form for next use
             document.getElementById('contact-form').reset();
@@ -115,10 +110,40 @@ function setupClickListener() {
     }
     
     // Prevent form overlay from closing when clicking on the form itself
+    const formPopup = document.getElementById('contact-form-popup');
     if (formPopup) {
         formPopup.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent document click handler from firing
+            event.stopPropagation();
         });
+    }
+    
+    // Close form when clicking outside of it on the overlay
+    if (formOverlay) {
+        formOverlay.addEventListener('click', () => {
+            hideForm();
+        });
+    }
+}
+
+/**
+ * Show the form overlay
+ */
+function showForm() {
+    const formOverlay = document.getElementById('form-overlay');
+    if (formOverlay) {
+        formOverlay.classList.remove('hidden');
+        document.body.classList.add('no-scroll');
+    }
+}
+
+/**
+ * Hide the form overlay
+ */
+function hideForm() {
+    const formOverlay = document.getElementById('form-overlay');
+    if (formOverlay) {
+        formOverlay.classList.add('hidden');
+        document.body.classList.remove('no-scroll');
     }
 }
 

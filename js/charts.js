@@ -10,7 +10,114 @@ document.addEventListener('DOMContentLoaded', () => {
     initCategoryChart();
     initShortageChart();
     initUsageChart();
+    
+    // Add fullscreen buttons to all chart containers
+    addFullscreenButtons();
 });
+
+/**
+ * Add fullscreen buttons to all chart containers
+ */
+function addFullscreenButtons() {
+    // Get all card bodies that contain a canvas element (chart)
+    const chartContainers = document.querySelectorAll('.card-body:has(canvas)');
+    
+    // For older browsers that don't support :has selector
+    document.querySelectorAll('.card-body').forEach(container => {
+        if (container.querySelector('canvas')) {
+            // Add chart-container class to position the fullscreen button
+            container.classList.add('chart-container');
+            
+            // Create the fullscreen button
+            const button = document.createElement('button');
+            button.className = 'fullscreen-btn';
+            button.innerHTML = '<i class="bi bi-arrows-fullscreen"></i> Fullscreen';
+            button.dataset.chartId = container.querySelector('canvas').id;
+            
+            // Add click event
+            button.addEventListener('click', showChartFullscreen);
+            
+            // Add button to container
+            container.appendChild(button);
+        }
+    });
+    
+    // Create fullscreen overlay (hidden by default)
+    const overlay = document.createElement('div');
+    overlay.id = 'chart-fullscreen-overlay';
+    overlay.className = 'fullscreen-overlay';
+    overlay.style.display = 'none';
+    
+    // Add to document
+    document.body.appendChild(overlay);
+}
+
+/**
+ * Show a chart in fullscreen mode
+ * @param {Event} event - Click event
+ */
+function showChartFullscreen(event) {
+    const chartId = event.currentTarget.dataset.chartId;
+    const originalCanvas = document.getElementById(chartId);
+    
+    if (!originalCanvas) return;
+    
+    const overlay = document.getElementById('chart-fullscreen-overlay');
+    if (!overlay) return;
+    
+    // Clear previous content
+    overlay.innerHTML = '';
+    
+    // Create fullscreen container
+    const container = document.createElement('div');
+    container.className = 'fullscreen-container';
+    
+    // Create close button
+    const closeButton = document.createElement('button');
+    closeButton.className = 'fullscreen-close';
+    closeButton.innerHTML = '<i class="bi bi-x-lg"></i> Close';
+    closeButton.addEventListener('click', () => {
+        overlay.style.display = 'none';
+        document.body.classList.remove('no-scroll');
+    });
+    
+    // Create new canvas for the fullscreen chart
+    const canvas = document.createElement('canvas');
+    canvas.id = `${chartId}-fullscreen`;
+    
+    // Add elements to container and overlay
+    container.appendChild(closeButton);
+    container.appendChild(canvas);
+    overlay.appendChild(container);
+    
+    // Show overlay
+    overlay.style.display = 'flex';
+    document.body.classList.add('no-scroll');
+    
+    // Get original chart instance and clone its data and options
+    const originalChart = Chart.getChart(chartId);
+    if (originalChart) {
+        // Clone data and options
+        const data = JSON.parse(JSON.stringify(originalChart.data));
+        const options = JSON.parse(JSON.stringify(originalChart.options));
+        
+        // Ensure the chart is responsive in fullscreen
+        options.responsive = true;
+        options.maintainAspectRatio = true;
+        if (options.plugins && options.plugins.legend) {
+            options.plugins.legend.labels = options.plugins.legend.labels || {};
+            options.plugins.legend.labels.font = options.plugins.legend.labels.font || {};
+            options.plugins.legend.labels.font.size = 16; // Bigger font in fullscreen
+        }
+        
+        // Create new chart
+        new Chart(canvas, {
+            type: originalChart.config.type,
+            data: data,
+            options: options
+        });
+    }
+}
 
 /**
  * Initialize Trend Chart - Line chart showing inventory trends over time

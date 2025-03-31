@@ -407,3 +407,125 @@ main {
 .no-scroll {
     overflow: hidden;
 }
+
+/* Request Demo Section */
+.request-demo-section {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.request-demo-section h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+/* Chart Fullscreen Mode */
+.chart-container {
+    position: relative;
+}
+
+.fullscreen-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+}
+
+.fullscreen-btn i {
+    margin-right: 4px;
+}
+
+.fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.fullscreen-container {
+    width: 90%;
+    height: 80%;
+    position: relative;
+}
+
+.fullscreen-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Clickable Cards */
+.clickable-card {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.clickable-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    border-left: 3px solid var(--primary-color);
+}
+
+/* Sorted Table */
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+th.sortable:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sort-icon {
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+/* Highlight row */
+.highlight-row {
+    animation: pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        background-color: rgba(0, 102, 204, 0.05);
+    }
+    to {
+        background-color: rgba(0, 102, 204, 0.15);
+    }
+}
+
+/* Clear filter button */
+#clear-filter-btn {
+    margin-left: auto;
+    display: block;
+}
