@@ -5,7 +5,8 @@
   "scripts": {
     "build": "node build-config.js",
     "dev-build": "node dev-build.js",
-    "dev": "npm run dev-build && echo 'Starting development server...'"
+    "dev": "npm run dev-build && echo 'Starting development server...'",
+    "vercel-build": "node build-config.js"
   },
   "engines": {
     "node": ">=14.0.0"

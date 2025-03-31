@@ -30,13 +30,50 @@ window.env = {
     AIRTABLE_TABLE_ID: "${AIRTABLE_TABLE_ID}"
 };`;
 
-// Ensure js directory exists
-const jsDir = path.join(__dirname, 'js');
-if (!fs.existsSync(jsDir)) {
-    fs.mkdirSync(jsDir, { recursive: true });
+// Create public directory
+const publicDir = path.join(__dirname, 'public');
+if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
 }
 
-// Write config file
-fs.writeFileSync(path.join(jsDir, 'config.js'), configContent);
+// Create public/js directory
+const publicJsDir = path.join(publicDir, 'js');
+if (!fs.existsSync(publicJsDir)) {
+    fs.mkdirSync(publicJsDir, { recursive: true });
+}
 
-console.log('Config file generated successfully with environment variables'); 
+// Write config file to public/js directory
+fs.writeFileSync(path.join(publicJsDir, 'config.js'), configContent);
+
+// Copy all static assets to the public directory
+function copyDir(src, dest) {
+    if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+    }
+    
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+    
+    for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+        
+        if (entry.isDirectory()) {
+            copyDir(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+    }
+}
+
+// Copy static directories to public
+const dirs = ['js', 'css', 'assets', 'data'];
+dirs.forEach(dir => {
+    if (fs.existsSync(path.join(__dirname, dir))) {
+        copyDir(path.join(__dirname, dir), path.join(publicDir, dir));
+    }
+});
+
+// Copy index.html to public directory
+fs.copyFileSync(path.join(__dirname, 'index.html'), path.join(publicDir, 'index.html'));
+
+console.log('Build completed successfully. Files generated in public directory.'); 

@@ -73,7 +73,18 @@ npm run build
 
 When deploying to Vercel:
 
-1. Add the environment variables in the Vercel project settings
-2. The build script will automatically generate the config.js file with these values
+1. Add the required environment variables in the Vercel project settings:
+   - `AIRTABLE_API_KEY`
+   - `AIRTABLE_BASE_ID`
+   - `AIRTABLE_TABLE_ID`
+   
+2. Connect your GitHub repository to Vercel
+   
+3. Vercel will automatically build and deploy the project using the configuration in `vercel.json`
+
+4. The deployment process:
+   - Creates a `public` directory with all static assets
+   - Generates the config.js file with environment variables
+   - Deploys the contents of the `public` directory
 
 **IMPORTANT: Never commit API keys or other secrets to the repository.**
