@@ -173,29 +173,38 @@ async function submitToAirtable(data) {
             throw new Error('Airtable configuration is missing. Please check your environment variables.');
         }
         
-        // Create the request to Airtable using the proper structure
+        // Log the request URL and data for debugging
+        console.log(`Submitting to: https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`);
+        
+        // Try with single record format first, which is simpler
+        const requestBody = {
+            fields: {
+                'Name': data.name,
+                'Company': data.company,
+                'Position': data.position,
+                'Email': data.email
+            },
+            typecast: true // Enable automatic type conversion
+        };
+        
+        console.log('Request body:', JSON.stringify(requestBody, null, 2));
+        
+        // Create the request to Airtable
         const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                records: [
-                    {
-                        fields: {
-                            'Name': data.name,
-                            'Company': data.company,
-                            'Position': data.position,
-                            'Email': data.email,
-                            'Created At': new Date().toISOString()
-                        }
-                    }
-                ]
-            })
+            body: JSON.stringify(requestBody)
         });
         
+        // Log response status for debugging
+        console.log('Response status:', response.status);
+        
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Airtable error response:', errorText);
             throw new Error(`Airtable API error: ${response.status}`);
         }
         
