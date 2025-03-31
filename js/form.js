@@ -161,30 +161,47 @@ function setupFormSubmission() {
  * @returns {Promise} - Airtable API response
  */
 async function submitToAirtable(data) {
-    // Get environment variables from window.env (set in config.js)
-    const { AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_TABLE_ID } = window.env;
-    
-    // Create the request to Airtable
-    const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            fields: {
-                'Name': data.name,
-                'Company': data.company,
-                'Position': data.position,
-                'Email': data.email,
-                'Created At': new Date().toISOString()
-            }
-        })
-    });
-    
-    if (!response.ok) {
-        throw new Error(`Airtable API error: ${response.status}`);
+    try {
+        // Get environment variables from window.env (set in config.js)
+        // Use optional chaining to prevent destructuring errors
+        const AIRTABLE_API_KEY = window.env?.AIRTABLE_API_KEY;
+        const AIRTABLE_BASE_ID = window.env?.AIRTABLE_BASE_ID;
+        const AIRTABLE_TABLE_ID = window.env?.AIRTABLE_TABLE_ID;
+        
+        // Check if configuration exists
+        if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
+            throw new Error('Airtable configuration is missing. Please check your environment variables.');
+        }
+        
+        // Create the request to Airtable using the proper structure
+        const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                records: [
+                    {
+                        fields: {
+                            'Name': data.name,
+                            'Company': data.company,
+                            'Position': data.position,
+                            'Email': data.email,
+                            'Created At': new Date().toISOString()
+                        }
+                    }
+                ]
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Airtable API error: ${response.status}`);
+        }
+        
+        return response.json();
+    } catch (error) {
+        console.error('Error in submitToAirtable:', error);
+        throw error;
     }
-    
-    return response.json();
 } 
